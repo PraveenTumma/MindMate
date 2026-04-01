@@ -20,10 +20,6 @@ try:
         raise ValueError("No API key found")
     client = Groq(api_key=api_key)
     use_ai = True
-#try:
-#    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-#    model = genai.GenerativeModel('gemini-1.5-pro')
-#    use_ai = True
 except:
     use_ai = False
     st.warning("Gemini API key not found. Using fallback responses.")
