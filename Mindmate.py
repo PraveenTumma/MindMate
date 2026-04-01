@@ -5,19 +5,22 @@ import plotly.express as px
 import datetime
 import time
 import json
+import google.generativeai as genai
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="MindMate", layout="wide", initial_sidebar_state="expanded")
 st.title("🧘 MindMate: Your AI Mental Wellness Companion")
 st.caption("Private, compassionate support – powered by AI and science.")
 
-# OpenAI API key (from secrets)
+# Google Gemnin API key (from secrets)
+# Load API key from secrets
 try:
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    model = genai.GenerativeModel('gemini-pro')
     use_ai = True
 except:
     use_ai = False
-    st.warning("OpenAI API key not found. Using fallback responses.")
+    st.warning("Gemini API key not found. Using fallback responses.")
 
 # ---------- INITIALISE SESSION STATE ----------
 if "mood_log" not in st.session_state:
@@ -72,12 +75,15 @@ if st.button("Get Reflection"):
                 (e.g., CBT technique, mindfulness, physical activity) that fits their mood.
                 Keep it warm and concise.
                 """
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7
-                )
-                reflection = response.choices[0].message.content
+                #response = openai.ChatCompletion.create(
+                #    model="gpt-3.5-turbo",
+                #    messages=[{"role": "user", "content": prompt}],
+                #    temperature=0.7
+                #)
+                #reflection = response.choices[0].message.content
+                
+                response = model.generate_content(prompt)
+                reflection = response.text
             else:
                 reflection = "Thank you for sharing. Taking a moment to breathe can help. Try a short walk outside."
 
@@ -94,13 +100,15 @@ with st.expander("💬 Chat with MindMate (AI coach)"):
         st.session_state.chat_history.append(f"You: {user_input}")
         if use_ai:
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a supportive mental wellness coach. Keep responses warm and short."},
-                        {"role": "user", "content": user_input}
-                    ]
-                )
+                #response = openai.ChatCompletion.create(
+                #    model="gpt-3.5-turbo",
+                #    messages=[
+                #        {"role": "system", "content": "You are a supportive mental wellness coach. Keep responses warm and short."},
+                #        {"role": "user", "content": user_input}
+                #    ]
+                #)
+                prompt = f"You are a supportive mental wellness coach. Keep responses warm and short.\nUser: {user_input}\nMindMate:"
+                response = model.generate_content(prompt)
                 reply = response.choices[0].message.content
             except:
                 reply = "I'm here for you. Sometimes just talking helps."
