@@ -4,7 +4,8 @@ import plotly.express as px
 import datetime
 import time
 import json
-import google.generativeai as genai
+#import google.generativeai as genai
+from groq import Groq
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="MindMate", layout="wide", initial_sidebar_state="expanded")
@@ -14,9 +15,15 @@ st.caption("Private, compassionate support – powered by AI and science.")
 # Google Gemnin API key (from secrets)
 # Load API key from secrets
 try:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-3.1-pro-preview')
+    api_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("No API key found")
+    client = Groq(api_key=api_key)
     use_ai = True
+#try:
+#    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+#    model = genai.GenerativeModel('gemini-1.5-pro')
+#    use_ai = True
 except:
     use_ai = False
     st.warning("Gemini API key not found. Using fallback responses.")
@@ -68,24 +75,28 @@ if st.button("Get Reflection"):
         with st.spinner("MindMate is listening..."):
             if use_ai:
                 prompt = f"""
-                You are a compassionate mental wellness coach. 
-                The user wrote: "{journal}"
-                Provide a supportive reflection, and then suggest one actionable coping strategy 
-                (e.g., CBT technique, mindfulness, physical activity) that fits their mood.
-                Keep it warm and concise.
-                """
-                #response = openai.ChatCompletion.create(
-                #    model="gpt-3.5-turbo",
-                #    messages=[{"role": "user", "content": prompt}],
-                #    temperature=0.7
-                #)
-                #reflection = response.choices[0].message.content
-                
-                response = model.generate_content(prompt)
-                reflection = response.text
+            You are a compassionate mental wellness coach. 
+            The user wrote: "{journal}"
+            Provide a supportive reflection, and then suggest one actionable coping strategy 
+            (e.g., CBT technique, mindfulness, physical activity) that fits their mood.
+            Keep it warm and concise.
+            """
+                try:
+                    response = client.chat.completions.create(
+                        model="mixtral-8x7b-32768",  # or "llama3-70b-8192", "llama3-8b-8192"
+                        messages=[
+                            {"role": "system", "content": "You are a supportive mental wellness coach. Be warm and concise."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        temperature=0.7,
+                        max_tokens=300
+                    )
+                    reflection = response.choices[0].message.content
+                except Exception as e:
+                    st.error(f"AI error: {e}")
+                    reflection = "Thank you for sharing. Taking a moment to breathe can help. Try a short walk outside."
             else:
                 reflection = "Thank you for sharing. Taking a moment to breathe can help. Try a short walk outside."
-
             st.session_state.journal_entries.append((today, journal, reflection))
             st.success("✨ Reflection generated ✨")
             st.write(reflection)
@@ -106,10 +117,17 @@ with st.expander("💬 Chat with MindMate (AI coach)"):
                 #        {"role": "user", "content": user_input}
                 #    ]
                 #)
-                prompt = f"You are a supportive mental wellness coach. Keep responses warm and short.\nUser: {user_input}\nMindMate:"
-                response = model.generate_content(prompt)
+                response = client.chat.completions.create(
+                model="mixtral-8x7b-32768",
+                messages=[
+                    {"role": "system", "content": "You are a supportive mental wellness coach. Keep responses warm and short."},
+                    {"role": "user", "content": user_input}
+                ],
+                temperature=0.7,
+                max_tokens=150
+            )
                 reply = response.choices[0].message.content
-            except:
+            except Exception as e:
                 reply = "I'm here for you. Sometimes just talking helps."
         else:
             reply = "I'm here for you. Let's take a deep breath together."
