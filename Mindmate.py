@@ -15,7 +15,7 @@ st.caption("Private, compassionate support – powered by AI and science.")
 # Load API key from secrets
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-pro')
     use_ai = True
 except:
     use_ai = False
