@@ -1,4 +1,8 @@
 streamlit
 groq
 pandas
+<<<<<<< HEAD
 plotly
+=======
+plotly
+>>>>>>> bb8e4314d9aac5e1277c7499e808c81677bd2777
