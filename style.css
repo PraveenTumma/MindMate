@@ -1,0 +1,208 @@
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0f172a;
+    color: #e2e8f0;
+}
+
+/* Force Streamlit Typography to Light Text to prevent dark-on-dark invisible text */
+.stApp p, .stApp span, .stApp div, .stApp label, .stApp li, 
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+    color: #f8fafc !important;
+}
+
+/* Base Gradient Background */
+.stApp {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Glassmorphism Effect for specific containers */
+.tip-of-the-day {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tip-of-the-day:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.tip-title {
+    color: #a78bfa;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tip-content {
+    color: #f1f5f9;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Typography styles */
+h1 {
+    font-family: 'Outfit', sans-serif;
+    color: #f8fafc;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(to right, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+h2, h3 {
+    font-family: 'Outfit', sans-serif;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+/* Inputs and text areas - Highlighting The Gratitude Log and Journal */
+div.stTextArea > div > div > textarea,
+div.stTextInput > div > div > input {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 2px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 12px !important;
+    color: #f8fafc !important;
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+div.stTextArea > div > div > textarea:focus,
+div.stTextInput > div > div > input:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    outline: none !important;
+    background-color: rgba(15, 23, 42, 0.8) !important;
+}
+
+div.stTextArea > label,
+div.stTextInput > label,
+div.stSlider > label {
+    color: #cbd5e1 !important;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Buttons */
+div.stButton > button {
+    background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+    color: white !important;
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+div.stButton > button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(217, 70, 239, 0.5);
+}
+
+div.stButton > button:active {
+    transform: translateY(1px);
+}
+
+div.stButton > button::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+div.stButton > button:hover::after {
+    opacity: 1;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+    color: #e2e8f0;
+}
+
+/* Chat bubble styling */
+.chat-message {
+    padding: 1.25rem 1.5rem;
+    border-radius: 18px;
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    line-height: 1.5;
+    font-size: 1.05rem;
+}
+
+.user-message {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    margin-left: 20%;
+}
+
+.bot-message {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #f1f5f9;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    margin-right: 20%;
+}
+
+/* Custom Dividers */
+hr {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    margin: 2rem 0 !important;
+}
+
+/* Introductory Banner Replacement */
+.intro-banner {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 1.2rem 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    color: #93c5fd;
+    font-family: 'Outfit', sans-serif;
+}
